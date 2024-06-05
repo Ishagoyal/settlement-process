@@ -1,16 +1,22 @@
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { submitAmount } from "../redux/negotiationSlice";
 import { useState } from "react";
 
 const PartyA = () => {
-  const [amount, setAmount] = useState(0);
-  const [response, setResponse] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const { response } = useSelector((state: RootState) => state.negotiation);
+  const [inputAmount, setInputAmount] = useState<number | null>(0);
 
   const handleSubmit = () => {
-    console.log(`Submitting ${amount} to Party B`);
-    // Simulate receiving a response from Party B
-    setTimeout(() => {
-      setResponse("Disputed");
-    }, 1000);
+    dispatch(submitAmount(inputAmount));
   };
+
+  const handleChange = (newAmount: number | null) => {
+    setInputAmount(newAmount);
+  };
+
+  const isDisabled = response.agreed; // Determine if the input and button should be disabled
 
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col justify-between h-[400px] w-[400px]">
@@ -29,20 +35,25 @@ const PartyA = () => {
           <input
             id="amount"
             type="number"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
-            className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            disabled={response.agreed}
+            value={inputAmount ?? ""}
+            onChange={(e) => handleChange(Number(e.target.value))}
+            className={`border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
           />
           <button
-            onClick={handleSubmit}
-            className="self-stretch bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-4"
+            onClick={() => handleSubmit()}
+            disabled={response.agreed}
+            className={`self-stretch bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-4 ${
+              isDisabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             Submit Amount
           </button>
         </form>
       </div>
       <div className="mt-4 self-stretch bg-gray-100 p-4 rounded-lg">
-        <strong>Party B Response:</strong> {response ? response : "Pending..."}
+        <strong>Party B Response:</strong>{" "}
+        {response.message ? response.message : "Pending..."}
       </div>
     </div>
   );

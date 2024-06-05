@@ -19,7 +19,7 @@ export const negotiationSlice = createSlice({
   name: "negotiation",
   initialState,
   reducers: {
-    submitAmount: (state, action: PayloadAction<number>) => {
+    submitAmount: (state, action: PayloadAction<number | null>) => {
       state.amount = action.payload;
     },
     resetAmount: (state) => {
