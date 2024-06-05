@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { setResponse } from "../redux/negotiationSlice";
+import { useEffect, useState } from "react";
 
 const PartyB = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { amount, response } = useSelector(
     (state: RootState) => state.negotiation
   );
+  const [latestAmount, setLatestAmount] = useState<number | null>(amount);
 
   const handleDecision = (agreed: boolean) => {
     if (agreed) {
@@ -16,6 +18,10 @@ const PartyB = () => {
     }
   };
 
+  useEffect(() => {
+    setLatestAmount(amount); // Update local state when Redux state changes
+  }, [amount]);
+
   const isDisabled = response.agreed; // Determine if the buttons should be disabled
 
   return (
@@ -24,8 +30,9 @@ const PartyB = () => {
         <h2 className="text-xl font-bold mb-4">Party B Interface</h2>
         <div className="mb-4">
           <strong>
-            Latest Amount Submitted: {amount ? `$${amount}` : "None"}
-          </strong>{" "}
+            Latest Amount Submitted:{" "}
+            {latestAmount ? `$${latestAmount}` : "None"}
+          </strong>
         </div>
       </div>
       <div className="self-stretch bg-gray-100 p-4 rounded-lg flex justify-center gap-4">

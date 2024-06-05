@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { submitAmount } from "../redux/negotiationSlice";
+import { resetRespondedFlag, submitAmount } from "../redux/negotiationSlice";
 import { useState } from "react";
 
 const PartyA = () => {
@@ -9,11 +9,21 @@ const PartyA = () => {
   const [inputAmount, setInputAmount] = useState<number | null>(0);
 
   const handleSubmit = () => {
+    if (response.responded) {
+      alert(
+        "Party B has responded. Please check the response before submitting a new amount."
+      );
+      return; // Prevent submission if Party B has responded
+    }
     dispatch(submitAmount(inputAmount));
   };
 
   const handleChange = (newAmount: number | null) => {
     setInputAmount(newAmount);
+  };
+
+  const handleAcknowledge = () => {
+    dispatch(resetRespondedFlag()); // Allow Party A to acknowledge and reset the responded flag
   };
 
   const isDisabled = response.agreed; // Determine if the input and button should be disabled
@@ -49,6 +59,14 @@ const PartyA = () => {
           >
             Submit Amount
           </button>
+          {response.responded && (
+            <button
+              onClick={handleAcknowledge}
+              className="bg-green-500 text-white font-semibold py-2 px-4 rounded mt-4"
+            >
+              Acknowledge Response
+            </button>
+          )}
         </form>
       </div>
       <div className="mt-4 self-stretch bg-gray-100 p-4 rounded-lg">

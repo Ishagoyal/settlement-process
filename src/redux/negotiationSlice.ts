@@ -5,6 +5,7 @@ interface NegotiationState {
   response: {
     agreed: boolean;
     message?: string;
+    responded: boolean;
   };
 }
 
@@ -12,6 +13,7 @@ const initialState: NegotiationState = {
   amount: null,
   response: {
     agreed: false,
+    responded: false,
   },
 };
 
@@ -21,6 +23,7 @@ export const negotiationSlice = createSlice({
   reducers: {
     submitAmount: (state, action: PayloadAction<number | null>) => {
       state.amount = action.payload;
+      state.response.responded = false;
     },
     resetAmount: (state) => {
       state.amount = null;
@@ -29,12 +32,15 @@ export const negotiationSlice = createSlice({
       state,
       action: PayloadAction<{ agreed: boolean; message?: string }>
     ) => {
-      state.response = action.payload;
+      state.response = { ...action.payload, responded: true };
+    },
+    resetRespondedFlag: (state) => {
+      state.response.responded = false;
     },
   },
 });
 
-export const { submitAmount, resetAmount, setResponse } =
+export const { submitAmount, resetAmount, setResponse, resetRespondedFlag } =
   negotiationSlice.actions;
 
 export default negotiationSlice.reducer;
