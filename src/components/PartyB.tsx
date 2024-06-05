@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { setResponse } from "../redux/negotiationSlice";
+import { changePartyBTurnFlag, setResponse } from "../redux/negotiationSlice";
 import { useEffect, useState } from "react";
 
 const PartyB = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { amount, response } = useSelector(
+  const { amount, response, partyBTurn } = useSelector(
     (state: RootState) => state.negotiation
   );
   const [latestAmount, setLatestAmount] = useState<number | null>(amount);
@@ -13,8 +13,10 @@ const PartyB = () => {
   const handleDecision = (agreed: boolean) => {
     if (agreed) {
       dispatch(setResponse({ agreed: true, message: "Agreed" }));
+      dispatch(changePartyBTurnFlag(false));
     } else {
       dispatch(setResponse({ agreed: false, message: "Disputed" }));
+      dispatch(changePartyBTurnFlag(false));
     }
   };
 
@@ -22,7 +24,7 @@ const PartyB = () => {
     setLatestAmount(amount); // Update local state when Redux state changes
   }, [amount]);
 
-  const isDisabled = response.agreed; // Determine if the buttons should be disabled
+  const isDisabled = response.agreed || response.responded || !partyBTurn; // Determine if the buttons should be disabled
 
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col justify-between h-[400px] w-[400px]">

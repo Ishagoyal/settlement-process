@@ -7,6 +7,7 @@ interface NegotiationState {
     message?: string;
     responded: boolean;
   };
+  partyBTurn: boolean;
 }
 
 const initialState: NegotiationState = {
@@ -15,6 +16,7 @@ const initialState: NegotiationState = {
     agreed: false,
     responded: false,
   },
+  partyBTurn: false,
 };
 
 export const negotiationSlice = createSlice({
@@ -37,10 +39,18 @@ export const negotiationSlice = createSlice({
     resetRespondedFlag: (state) => {
       state.response.responded = false;
     },
+    changePartyBTurnFlag: (state, action) => {
+      state.partyBTurn = action.payload;
+    },
   },
 });
 
-export const { submitAmount, resetAmount, setResponse, resetRespondedFlag } =
-  negotiationSlice.actions;
+export const {
+  submitAmount,
+  resetAmount,
+  setResponse,
+  resetRespondedFlag,
+  changePartyBTurnFlag,
+} = negotiationSlice.actions;
 
 export default negotiationSlice.reducer;
