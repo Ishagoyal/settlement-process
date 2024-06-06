@@ -42,3 +42,4 @@ export default {
 ## Deployment Link
 
 - Deployed it on netlify - https://settlement-process.netlify.app/
+- Loom Video - https://www.loom.com/share/9818d35adc7241a69e4dc1bd4e5b2c4e?sid=e9ab6e58-3620-4d6d-baee-2c06d79ed0f7

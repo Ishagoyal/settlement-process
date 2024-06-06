@@ -117,7 +117,7 @@ const PartyA = () => {
           <div className="mt-4 self-stretch bg-gray-100 p-4 rounded-lg">
             <strong>Party B Response:</strong>{" "}
             {response.message && response.responded
-              ? `${response.message} for the amount ${lastAmount}`
+              ? `${response.message} for the amount $${lastAmount}`
               : "Pending..."}
           </div>
         </>
